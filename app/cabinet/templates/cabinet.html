@@ -1,0 +1,185 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <style>
+        .gradient-custom {
+            /* fallback for old browsers */
+            background: #fbc2eb;
+
+            /* Chrome 10-25, Safari 5.1-6 */
+            background: -webkit-linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238, 1));
+
+            /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+            background: linear-gradient(to right, rgba(251, 194, 235, 1), rgba(166, 193, 238, 1))
+        }
+    </style>
+    <section class="h-100 gradient-custom-2">
+        <div class="container py-5">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col col-lg-9 col-xl-7">
+                    <div class="card">
+                        <div class="rounded-top text-white d-flex flex-row"
+                             style="background-color: #000; height:200px;">
+                            <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
+                                <img src="{{ current_user.avatar }}"
+                                     alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
+                                     style="width: 150px; z-index: 1">
+                            </div>
+                            <div class="ms-3" style="margin-top: 130px;">
+                                <h5>{{ current_user.username | capitalize }}</h5>
+                            </div>
+                        </div>
+                        <div class="p-4 text-black" style="background-color: #f8f9fa;">
+                            <div class="d-flex justify-content-end text-center py-1">
+                                <div>
+                                    <button class="btn border border-1 rounded-4" data-bs-toggle="modal"
+                                            data-bs-target="#addHouseModal" data-bs-whatever="@addhouse" title="Добавить дом">
+                                        <i class="bi bi-house" style="font-size: 2rem;">
+                                            <i class="bi bi-plus-square"></i>
+                                        </i>
+                                    </button>
+
+                                    <div class="modal fade" id="addHouseModal" tabindex="-1"
+                                         aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title" id="exampleModalLabel">Добавление дома</h5>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                            aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <form action="{{ url_for('house.add_house') }}" method="post" enctype="multipart/form-data">
+                                                        {{ hf.hidden_tag() }}
+                                                        <div class="mb-3">
+                                                            <div class="btn-group" role="group"
+                                                                 aria-label="Basic radio toggle button group">
+                                                                {% for rbHF in hf.house_or_flat %}
+                                                                    {{ rbHF(class="btn-check", autocomplete="off") }}
+                                                                    {{ rbHF.label(class="btn btn-outline-primary") }}
+                                                                {% endfor %}
+                                                            </div>
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            {{ hf.rooms.label(class="col-form-label") }}
+                                                            {{ hf.rooms(class="form-control") }}
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            {{ hf.beds.label(class="col-form-label") }}
+                                                            {{ hf.beds(class="form-control") }}
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            {{ hf.price.label(class="col-form-label") }}
+                                                            {{ hf.price(class="form-control") }}
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <div class="btn-group" role="group"
+                                                                 aria-label="Basic radio toggle button group"
+                                                                 id="askCrowd">
+                                                                {% for crowd in hf.crowd %}
+                                                                    {{ crowd(class="btn-check", autocomplete="off") }}
+                                                                    {{ crowd.label(class="btn btn-outline-primary") }}
+                                                                {% endfor %}
+                                                            </div>
+                                                            {{ hf.crowd.label(class="col-form-label") }}
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            <div class="btn-group" role="group"
+                                                                 aria-label="Basic radio toggle button group"
+                                                                 id="askNoisy">
+                                                                {% for noisy in hf.noisy %}
+                                                                    {{ noisy(class="btn-check", autocomplete="off") }}
+                                                                    {{ noisy.label(class="btn btn-outline-primary") }}
+                                                                {% endfor %}
+                                                            </div>
+                                                            {{ hf.noisy.label(class="col-form-label") }}
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            {{ hf.images(class="form-control") }}
+                                                        </div>
+                                                        <div class="mb-3">
+                                                            {{ hf.description.label(class="col-form-label") }}
+                                                            {{ hf.description(class="form-control") }}
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            {{ hf.submit(class="btn btn-primary") }}
+                                                        </div>
+                                                    </form>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="px-3">
+                                    <a href="{{ url_for('dialogs.index') }}">
+                                        <i class="bi bi-chat" style="font-size: 2rem;"></i>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card-body p-4 text-black">
+                            <div class="mb-5">
+                                <p class="lead fw-normal mb-1">Обо мне</p>
+                                <div class="p-4" style="background-color: #f8f9fa;">
+                                    <form action="" method="post">
+                                        {{ form.hidden_tag() }}
+                                    </form>
+                                    <p class="font-italic mb-1">
+                                        {{ form.username.label }}<br>
+                                        {{ form.username(size=32) }}
+                                        {% for error in form.username.errors %}
+                                            <span style="color: red">[{{ error }}]</span>
+                                        {% endfor %}
+                                    </p>
+                                    <p class="font-italic mb-1">
+                                        {{ form.email.label }}<br>
+                                        {{ form.email(size=32) }}
+                                        {% for error in form.email.errors %}
+                                            <span style="color: red">[{{ error }}]</span>
+                                        {% endfor %}
+                                    </p>
+                                    <p class="font-italic mb-0">
+                                        {{ form.phone_number.label }}<br>
+                                        {{ form.phone_number(size=32) }}
+                                        {% for error in form.phone_number.errors %}
+                                            <span style="color: red">[{{ error }}]</span>
+                                        {% endfor %}
+                                    </p>
+                                    <p class="font-italic mb-1">
+                                        {{ form.avatar() }}
+                                    </p>
+                                    <p class="font-italic mb-1">
+                                        {{ form.save() }}
+                                    </p>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center mb-4">
+                                <p class="lead fw-normal mb-0">Мои объявления</p>
+                                <p class="mb-0"><a href="#!" class="text-muted">Показать все</a></p>
+                            </div>
+                        {% for house in houses %}
+                            <div class="row">
+
+                                    <div class="col mb-2">
+                                        <a href="{{ url_for('house.house_page', house_id=house.id) }}">
+                                            <div class="card w-100 rounded-3" style="width: 18rem;">
+                                                <img src="{{ url_for('house.static', filename=house.images[0].img_url) }}"
+                                                     class="card-img-top" alt="...">
+                                                <div class="card-body">
+                                                    <p class="card-text">{{ house.description }}</p>
+                                                </div>
+                                            </div>
+                                        </a>
+                                    </div>
+
+                            </div>
+                        {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+{% endblock %}

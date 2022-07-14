@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container">
+        {% if houses %}
+            <div class="house-items mt-5">
+            {% for house in houses %}
+                <a href="{{ url_for('house.house_page', house_id=house.id) }}">
+                    <div class="house-item mt-5">
+                        <div class="card w-100 border-0" style="width: 18rem;">
+
+                            <div class="row row-cols-1 row-cols-sm-3">
+                                {% for image in house.images[:3] %}
+                                    <div class="col" style="height: 18rem">
+                                        <img src="{{ url_for('house.static', filename=image.img_url) }}"
+                                             class="img-thumbnail border-0" alt="..."
+                                             style="overflow: hidden; height: 100%; object-fit: cover; width: 100%">
+                                    </div>
+                                {% endfor %}
+                            </div>
+                            <div class="card-body">
+                                <h5 class="card-title">
+                                    <div class="d-flex justify-content-between">
+                                        <div class="d-flex justify-content-around" style="width: 20%">
+                                            <span title="Кол-во комнат">
+                                                <i class="bi bi-door-open"></i>
+                                                {{ house.rooms }}
+                                            </span>
+                                            <span title="Кол-во спальных мест">
+                                                <i class="bi bi-person-fill"></i>
+                                                {{ house.beds }}
+                                            </span>
+                                            {% if house.is_noisy %}
+                                                <i class="bi bi-volume-up" style="font-size: 1.4rem;" title="Шумный отдых"></i>
+                                            {% else %}
+                                                <i class="bi bi-volume-mute" style="font-size: 1.4rem;" title="Спокойный отдых"></i>
+                                            {% endif %}
+                                            <span class="price" title="Цена (сутки)">
+                                                <i class="bi bi-cash"></i>
+                                                {{ house.price | int }}
+                                            </span>
+                                        </div>
+                                        <div>
+                                            {#                                <a href="{{ url_for('house.house_page', house_id=house.id) }}">#}
+                                            {#                                    <i class="bi bi-eye" style="font-size: 1.8rem;"></i>#}
+                                            {#                                </a>#}
+                                        </div>
+                                    </div>
+                                </h5>
+                            </div>
+                        </div>
+                    </div>
+                </a>
+            {% endfor %}
+        </div>
+        {% else %}
+            {% include "_video_slider.html" %}
+        {% endif %}
+    </div>
+{% endblock %}

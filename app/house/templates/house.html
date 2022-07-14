@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col d-flex justify-content-center">
+                <div id="myCarousel" class="carousel slide w-75" data-bs-ride="carousel">
+                    <div class="carousel-indicators">
+                        {% for image in house.images %}
+                            <button type="button" data-bs-target="#myCarousel" data-bs-slide-to="{{ loop.index }}" class="active"
+                                    aria-current="true" aria-label="Slide {{ loop.index }}"></button>
+                        {% endfor %}
+                    </div>
+                    <div class="carousel-inner lightbox" style="height: 38rem">
+                        {% for image in house.images %}
+                            <div class="carousel-item {% if loop.first %}active{% endif %}">
+                                <img src="{{ url_for('house.static', filename=image.img_url) }}" alt=""
+                                     class="img-fluid" style="overflow: hidden; height: 100%; object-fit: cover; width: 100%">
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#myCarousel"
+                            data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#myCarousel"
+                            data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-5 gx-5">
+            <div class="col">
+                <div class="p-3 bg-light rounded-3">
+                    Цена: {{ house.price }} р.<br>
+                    Количество комнат: {{ house.rooms }} <br>
+                    Количество спальных мест: {{ house.beds }} <br>
+                    Описание: {{ house.description }}
+                </div>
+            </div>
+            <div class="col">
+                <div class="p-3 bg-light rounded-3">
+                    {% if current_user != house.author and current_user.is_authenticated %}
+                    <a href="{{ url_for('dialogs.write_message', sender_id=current_user.id, recipient_id=house.author.id) }}">
+                        <i class="bi bi-vector-pen" style="font-size: 1.8rem"></i>
+                    </a>
+                    {% endif %}
+                    <span style="font-size: 1.8rem;">{{ house.author.username | capitalize }}</span>
+                </div>
+            </div>
+        </div>
+
+    </div>
+{% endblock %}
