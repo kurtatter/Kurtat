@@ -15,7 +15,7 @@ class MessageService:
     @staticmethod
     def get_last_message(dialog):
         return Message.query.filter_by(dialog_id=dialog.id)\
-            .order_by(-Message.send_datetime).first()
+            .order_by(Message.send_datetime).all()[-1]
 
     @staticmethod
     def get_dialog_messages(dialog_id):

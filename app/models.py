@@ -26,7 +26,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), unique=True)
     email = db.Column(db.String(128), unique=True)
     password_hash = db.Column(db.String(128))
-    phone_number = db.Column(db.String(24), unique=True, default=None)
+    phone_number = db.Column(db.String(24))
     deleted = db.Column(db.Boolean, default=0)
     avatar = db.Column(db.String(240), nullable=True)
     dialogs = db.relationship('Dialog', secondary=dialogs, backref='users', lazy='dynamic')
@@ -35,12 +35,7 @@ class User(UserMixin, db.Model):
     def check_password(self, password):
         return check_password_hash(self.password_hash, password)
 
-    @property
-    def password(self):
-        raise AttributeError('Password is not a readable attribute.')
-
-    @password.setter
-    def password(self, password):
+    def set_password(self, password):
         self.password_hash = generate_password_hash(password)
 
     def set_avatar(self, avatar_number):

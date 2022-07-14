@@ -36,8 +36,10 @@ def write_message(sender_id, recipient_id):
 @login_required
 @bp.route('/dialog/<dialog_id>', methods=['GET', 'POST'])
 def dialog(dialog_id):
+    print('dialog', dialog_id)
     data = {}
     if dialog_id:
+        MessageService.all_messages_have_been_read(dialog_id, current_user.id)
         data.update({
             'messages': message_service.get_dialog_messages(dialog_id),
             'last_message': message_service.get_last_message

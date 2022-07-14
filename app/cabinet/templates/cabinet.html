@@ -21,9 +21,9 @@
                         <div class="rounded-top text-white d-flex flex-row"
                              style="background-color: #000; height:200px;">
                             <div class="ms-4 mt-5 d-flex flex-column" style="width: 150px;">
-                                <img src="{{ current_user.avatar }}"
+                                <img src="{% if current_user.avatar %}{{ url_for('cabinet.static', filename=current_user.avatar) }}{% endif %}"
                                      alt="Generic placeholder image" class="img-fluid img-thumbnail mt-4 mb-2"
-                                     style="width: 150px; z-index: 1">
+                                     style="width: 150px; z-index: 1; height: 12rem;">
                             </div>
                             <div class="ms-3" style="margin-top: 130px;">
                                 <h5>{{ current_user.username | capitalize }}</h5>
@@ -33,7 +33,8 @@
                             <div class="d-flex justify-content-end text-center py-1">
                                 <div>
                                     <button class="btn border border-1 rounded-4" data-bs-toggle="modal"
-                                            data-bs-target="#addHouseModal" data-bs-whatever="@addhouse" title="Добавить дом">
+                                            data-bs-target="#addHouseModal" data-bs-whatever="@addhouse"
+                                            title="Добавить дом">
                                         <i class="bi bi-house" style="font-size: 2rem;">
                                             <i class="bi bi-plus-square"></i>
                                         </i>
@@ -49,7 +50,8 @@
                                                             aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    <form action="{{ url_for('house.add_house') }}" method="post" enctype="multipart/form-data">
+                                                    <form action="{{ url_for('house.add_house') }}" method="post"
+                                                          enctype="multipart/form-data">
                                                         {{ hf.hidden_tag() }}
                                                         <div class="mb-3">
                                                             <div class="btn-group" role="group"
@@ -123,50 +125,50 @@
                             <div class="mb-5">
                                 <p class="lead fw-normal mb-1">Обо мне</p>
                                 <div class="p-4" style="background-color: #f8f9fa;">
-                                    <form action="" method="post">
+                                    <form action="" method="post" enctype="multipart/form-data">
                                         {{ form.hidden_tag() }}
+                                        <p class="font-italic mb-1">
+                                            {{ form.username.label }}<br>
+                                            {{ form.username(size=32) }}
+                                            {% for error in form.username.errors %}
+                                                <span style="color: red">[{{ error }}]</span>
+                                            {% endfor %}
+                                        </p>
+                                        <p class="font-italic mb-1">
+                                            {{ form.email.label }}<br>
+                                            {{ form.email(size=32) }}
+                                            {% for error in form.email.errors %}
+                                                <span style="color: red">[{{ error }}]</span>
+                                            {% endfor %}
+                                        </p>
+                                        <p class="font-italic mb-0">
+                                            {{ form.phone_number.label }}<br>
+                                            {{ form.phone_number(size=32) }}
+                                            {% for error in form.phone_number.errors %}
+                                                <span style="color: red">[{{ error }}]</span>
+                                            {% endfor %}
+                                        </p>
+                                        <p class="font-italic mb-1">
+                                            {{ form.avatar() }}
+                                        </p>
+                                        <p class="font-italic mb-1">
+                                            {{ form.save() }}
+                                        </p>
                                     </form>
-                                    <p class="font-italic mb-1">
-                                        {{ form.username.label }}<br>
-                                        {{ form.username(size=32) }}
-                                        {% for error in form.username.errors %}
-                                            <span style="color: red">[{{ error }}]</span>
-                                        {% endfor %}
-                                    </p>
-                                    <p class="font-italic mb-1">
-                                        {{ form.email.label }}<br>
-                                        {{ form.email(size=32) }}
-                                        {% for error in form.email.errors %}
-                                            <span style="color: red">[{{ error }}]</span>
-                                        {% endfor %}
-                                    </p>
-                                    <p class="font-italic mb-0">
-                                        {{ form.phone_number.label }}<br>
-                                        {{ form.phone_number(size=32) }}
-                                        {% for error in form.phone_number.errors %}
-                                            <span style="color: red">[{{ error }}]</span>
-                                        {% endfor %}
-                                    </p>
-                                    <p class="font-italic mb-1">
-                                        {{ form.avatar() }}
-                                    </p>
-                                    <p class="font-italic mb-1">
-                                        {{ form.save() }}
-                                    </p>
                                 </div>
                             </div>
                             <div class="d-flex justify-content-between align-items-center mb-4">
                                 <p class="lead fw-normal mb-0">Мои объявления</p>
                                 <p class="mb-0"><a href="#!" class="text-muted">Показать все</a></p>
                             </div>
-                        {% for house in houses %}
-                            <div class="row">
+                            {% for house in houses %}
+                                <div class="row">
 
                                     <div class="col mb-2">
                                         <a href="{{ url_for('house.house_page', house_id=house.id) }}">
                                             <div class="card w-100 rounded-3" style="width: 18rem;">
                                                 <img src="{{ url_for('house.static', filename=house.images[0].img_url) }}"
-                                                     class="card-img-top" alt="...">
+                                                     class="card-img-top" alt="..." style="height: 32rem;">
                                                 <div class="card-body">
                                                     <p class="card-text">{{ house.description }}</p>
                                                 </div>
@@ -174,8 +176,8 @@
                                         </a>
                                     </div>
 
-                            </div>
-                        {% endfor %}
+                                </div>
+                            {% endfor %}
                         </div>
                     </div>
                 </div>
